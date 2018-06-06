@@ -1,0 +1,3 @@
+rootProject.name = 'rnLoader'
+
+include ':app'
