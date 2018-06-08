@@ -14,32 +14,47 @@ import {
 } from 'react-native';
 
 type Props = {};
+var CIR_DIMEN = 30;
+var CIR_RADIUS = 15;
+var SPRING_CONFIG = {tension: 2, friction: 3}; 
 
 export default class App extends Component<Props> {
-    constructor () {
+  constructor () {
     super()
     this.animatedValue = new Animated.Value(0)
   }
+  componentDidMount(){
+    this.animate()
+  }
+  animate () {
+  this.animatedValue.setValue(0)
+  Animated.timing(
+    this.animatedValue,
+    {
+      toValue: 1,
+      duration: 2000,
+      easing: Easing.linear
+    }
+  ).start(() => this.animate())
+}
   
+
   render() {
-    const spin = this.animatedValue.interpolate({
-    inputRange: [0, 1],
-    outputRange: ['0deg', '360deg'],
-    easing: Easing.back(2)
+  const rotateX = this.animatedValue.interpolate({
+    inputRange: [0, 0.5, 1],
+    outputRange: ['0deg', '180deg', '0deg']
+  })
+   const movingMargin = this.animatedValue.interpolate({
+    inputRange: [0, 0.5, 1],
+    outputRange: [0, 300, 0]
   })
     return (
       <View style={styles.container}>
-        <View style={{width:50,height:50,backgroundColor:'white',borderRadius:25,elevation: 10}}></View>
-      <View style={{width:50,height:50,backgroundColor:'yellow',borderRadius:25,elevation: 10}} >
-        <Animated.View  style={{
-          width: 50,
-          height: 50,
-          transform: [{rotate: spin}] }}>
-            <Text>Hello </Text>
-        </Animated.View>
+        <Animated.View style={[styles.circle]} />
+        <Animated.View style={[styles.circle,{  marginLeft: movingMargin,
+ }]} />
       </View>
-      </View>
-    );
+      );
   }
 }
 
@@ -48,16 +63,14 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'blue',
+    backgroundColor: 'white',
+    flexDirection:'row'
   },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
+  circle: {
+    width: CIR_DIMEN,
+    height: CIR_DIMEN,
+    borderRadius: CIR_RADIUS,
+    backgroundColor: 'blue'
+  } 
+
 });
